@@ -107,6 +107,14 @@ func (bl *BallotLog) RegisterLog(stub shim.ChaincodeStubInterface, args []string
 		return shim.Error("Error: election on status " + status)
 	}
 
+	ballotLogBytes, err := stub.GetState(ballotLog.VoterId)
+
+	if err != nil {
+		return shim.Error("Error getting state: " + err.Error())
+	} else if ballotLogBytes != nil {
+		return shim.Error("Error: voter has already voted")
+	}
+
 	err = stub.PutState(ballotLog.VoterId, ballotBytes)
 
 	if err != nil {
@@ -152,17 +160,19 @@ func (bl *BallotLog) GetByRange(stub shim.ChaincodeStubInterface, args []string)
 			return shim.Error("Error getting state: " + err.Error())
 		}
 
-		ballotLogBytes := ballotLogEntry.Value
+		if ballotLogEntry.Key != "InitElection" && ballotLogEntry.Key != "EndElection" {
+			ballotLogBytes := ballotLogEntry.Value
 
-		ballotLog := BallotLog{}
+			ballotLog := BallotLog{}
 
-		err = json.Unmarshal(ballotLogBytes, &ballotLog)
+			err = json.Unmarshal(ballotLogBytes, &ballotLog)
 
-		if err != nil {
-			return shim.Error(err.Error())
+			if err != nil {
+				return shim.Error("Error getting state: " + err.Error())
+			}
+
+			ballots = append(ballots, ballotLog)
 		}
-
-		ballots = append(ballots, ballotLog)
 	}
 
 	ballotLogsAsBytes, err := json.Marshal(ballots)

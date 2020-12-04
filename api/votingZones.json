@@ -1,0 +1,40 @@
+{
+  "machines": [
+    {
+      "region": "SP",
+      "code": "SP1"
+    },
+    {
+      "region": "SP",
+      "code": "SP2"
+    },
+    {
+      "region": "SP",
+      "code": "SP3"
+    },
+    {
+      "region": "RJ",
+      "code": "RJ1"
+    },
+    {
+      "region": "RJ",
+      "code": "RJ2"
+    },
+    {
+      "region": "RJ",
+      "code": "RJ3"
+    },
+    {
+      "region": "MG",
+      "code": "MG1"
+    },
+    {
+      "region": "MG",
+      "code": "MG2"
+    },
+    {
+      "region": "MG",
+      "code": "MG3"
+    }
+  ]
+}

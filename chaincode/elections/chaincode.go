@@ -144,17 +144,19 @@ func (bal *Ballot) AuditByRange(stub shim.ChaincodeStubInterface, args []string)
 			return shim.Error("Error getting state: " + err.Error())
 		}
 
-		ballotBytes := ballotEntry.Value
+		if ballotEntry.Key != "InitElection" && ballotEntry.Key != "EndElection" {
+			ballotBytes := ballotEntry.Value
 
-		ballot := Ballot{}
+			ballot := Ballot{}
 
-		err = json.Unmarshal(ballotBytes, &ballot)
+			err = json.Unmarshal(ballotBytes, &ballot)
 
-		if err != nil {
-			return shim.Error(err.Error())
+			if err != nil {
+				return shim.Error("Error getting state: " + err.Error())
+			}
+
+			ballots = append(ballots, ballot)
 		}
-
-		ballots = append(ballots, ballot)
 	}
 
 	ballotsAsBytes, err := json.Marshal(ballots)
